@@ -1,86 +1,59 @@
-// SIMPLE ADMIN PASSWORD
-const adminPassword = "admin123"; // change this
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-const entered = prompt("Enter Admin Password:");
-if (entered !== adminPassword) {
-  alert("Access Denied");
-  window.location.href = "index.html";
-}
+/* 🔴 SAME FIREBASE CONFIG AS script.js */
+const firebaseConfig = {
+  apiKey: "AIzaSyBoo_tI8I7bOtEZLwGo1IFpgl5n9i_Qhs",
+  authDomain: "ismanuhk-9407d.firebaseapp.com",
+  projectId: "ismanuhk-9407d",
+  storageBucket: "ismanuhk-9407d.firebasestorage.app",
+  messagingSenderId: "753802713936",
+  appId: "1:753802713936:web:13ee7c0b1c4da9ed90ea55"
+};
 
-
-function exportCSV(){
-  const contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-  if(contacts.length === 0){
-    alert("No data to export");
-    return;
-  }
-
-  let csv = "Name,Email,Message,Date\n";
-
-  contacts.forEach(c => {
-    csv += `"${c.name}","${c.email}","${c.message}","${c.date}"\n`;
-  });
-
-  const blob = new Blob([csv], { type:"text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "contact_messages.csv";
-  a.click();
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 const tableBody = document.querySelector("#messageTable tbody");
 const emptyMsg = document.getElementById("emptyMsg");
 
-function loadMessages(){
-  const contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+async function loadMessages(){
+  const q = query(
+    collection(db, "contacts"),
+    orderBy("createdAt", "desc")
+  );
+
+  const snapshot = await getDocs(q);
 
   tableBody.innerHTML = "";
 
-  if(contacts.length === 0){
+  if(snapshot.empty){
     emptyMsg.style.display = "block";
     return;
   }
 
   emptyMsg.style.display = "none";
 
-  contacts.forEach((contact, index) => {
+  snapshot.forEach(doc => {
+    const d = doc.data();
     const row = document.createElement("tr");
 
     row.innerHTML = `
-      <td>${contact.name}</td>
-      <td>${contact.email}</td>
-      <td>${contact.message}</td>
-      <td>${contact.date}</td>
-      <td><button onclick="deleteMessage(${index})">Delete</button></td>
+      <td>${d.name}</td>
+      <td>${d.email}</td>
+      <td>${d.message}</td>
+      <td>${new Date(d.createdAt.seconds * 1000).toLocaleString()}</td>
     `;
 
     tableBody.appendChild(row);
   });
 }
 
-function deleteMessage(index){
-  let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-  contacts.splice(index, 1);
-  localStorage.setItem("contacts", JSON.stringify(contacts));
-  loadMessages();
-}
-
-// Load on page open
+// Load messages on page open
 loadMessages();
