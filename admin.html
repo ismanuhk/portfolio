@@ -2,22 +2,52 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel | Contact Messages</title>
+  <title>Admin Panel | Messages</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
   <style>
     body{
-      font-family:Inter, sans-serif;
-      background:#f9fafb;
+      font-family: Inter, sans-serif;
+      background:#f1f5f9;
       padding:40px;
+    }
+
+    /* LOGIN */
+    #loginBox{
+      max-width:320px;
+      margin:120px auto;
+      background:#fff;
+      padding:30px;
+      border-radius:10px;
+      box-shadow:0 10px 25px rgba(0,0,0,.1);
+      text-align:center;
+    }
+    #loginBox input{
+      width:100%;
+      padding:10px;
+      margin:15px 0;
+    }
+    #loginBox button{
+      width:100%;
+      padding:10px;
+      background:#4f46e5;
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+    }
+    #errorMsg{color:red;font-size:.9rem;}
+
+    /* PANEL */
+    #adminPanel{
+      display:none;
     }
 
     h1{
       text-align:center;
       margin-bottom:30px;
-      color:#0f172a;
     }
 
     table{
@@ -25,53 +55,79 @@
       max-width:1100px;
       margin:0 auto;
       border-collapse:collapse;
-      background:#ffffff;
+      background:#fff;
       border-radius:12px;
       overflow:hidden;
       box-shadow:0 10px 30px rgba(0,0,0,0.1);
     }
-
     th, td{
-      padding:14px 16px;
-      text-align:left;
+      padding:14px;
       border-bottom:1px solid #e5e7eb;
-      font-size:0.9rem;
+      text-align:left;
+      font-size:.9rem;
     }
-
     th{
       background:#6366f1;
-      color:#ffffff;
+      color:#fff;
     }
-
-    tr:last-child td{
-      border-bottom:none;
-    }
-
-    .empty{
-      text-align:center;
-      color:#64748b;
-      margin-top:40px;
-    }
+    tr:last-child td{border-bottom:none;}
   </style>
 </head>
 <body>
 
-<h1>Contact Messages</h1>
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Admin Login</h2>
+  <input type="password" id="adminPassword" placeholder="Enter password">
+  <button onclick="login()">Login</button>
+  <p id="errorMsg"></p>
+</div>
 
-<table id="messageTable">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Message</th>
-      <th>Date</th>
-    </tr>
-  </thead>
-  <tbody></tbody>
-</table>
+<!-- ADMIN PANEL -->
+<div id="adminPanel">
+  <h1>Contact Messages</h1>
 
-<p class="empty" id="emptyMsg">No messages found.</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody id="messageBody"></tbody>
+  </table>
+</div>
 
-<script type="module" src="admin.js"></script>
+<script>
+  const PASSWORD = "admin123"; // 🔴 change if you want
+
+  function login(){
+    const input = document.getElementById("adminPassword").value;
+    if(input === PASSWORD){
+      localStorage.setItem("adminAuth","true");
+      showAdmin();
+    }else{
+      document.getElementById("errorMsg").innerText = "Wrong password";
+    }
+  }
+
+  function showAdmin(){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("adminPanel").style.display = "block";
+
+    // load firebase admin logic
+    const s = document.createElement("script");
+    s.type = "module";
+    s.src = "admin.js";
+    document.body.appendChild(s);
+  }
+
+  if(localStorage.getItem("adminAuth") === "true"){
+    showAdmin();
+  }
+</script>
+
 </body>
 </html>
