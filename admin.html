@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel | Contact Messages</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body{
+      font-family:Inter, sans-serif;
+      background:#f9fafb;
+      padding:40px;
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+      color:#0f172a;
+    }
+
+    table{
+      width:100%;
+      max-width:1000px;
+      margin:0 auto;
+      border-collapse:collapse;
+      background:#ffffff;
+      border-radius:10px;
+      overflow:hidden;
+      box-shadow:0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    th, td{
+      padding:14px 16px;
+      text-align:left;
+      border-bottom:1px solid #e5e7eb;
+      font-size:0.9rem;
+    }
+
+    th{
+      background:#6366f1;
+      color:#ffffff;
+    }
+
+    tr:last-child td{
+      border-bottom:none;
+    }
+
+    button{
+      padding:6px 12px;
+      background:#ef4444;
+      color:#ffffff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      font-size:0.8rem;
+    }
+
+    button:hover{
+      opacity:0.9;
+    }
+
+    .empty{
+      text-align:center;
+      color:#64748b;
+      margin-top:40px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Contact Messages</h1>
+<button onclick="exportCSV()" style="margin-bottom:15px;">
+  Export Messages
+</button>
+
+
+<table id="messageTable">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Message</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p class="empty" id="emptyMsg">No messages found.</p>
+
+<script src="admin.js"></script>
+</body>
+</html>
