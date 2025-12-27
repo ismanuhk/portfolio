@@ -1,3 +1,9 @@
+if(localStorage.getItem("adminAuth") !== "true"){
+  throw new Error("Not authorized");
+}
+
+
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getFirestore,
@@ -57,3 +63,4 @@ async function loadMessages(){
 
 // Load messages on page open
 loadMessages();
+
